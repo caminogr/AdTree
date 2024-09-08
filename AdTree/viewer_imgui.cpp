@@ -242,6 +242,8 @@ namespace easy3d {
                 open();
             if (ImGui::MenuItem("Save branches ...", "Ctrl+S"))
                 save();
+            if (ImGui::MenuItem("Save lsystem"))
+                export_lsystem();
             if (ImGui::MenuItem("Save skeleton ..."))
                 export_skeleton();
             if (ImGui::MenuItem("Save leaves ..."))

@@ -67,6 +67,7 @@ protected:
     bool open() override;
     bool save() const override;
 
+    void export_lsystem() const override;
     void export_skeleton() const override;
     void export_leaves() const override;
 

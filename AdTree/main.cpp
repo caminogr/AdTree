@@ -41,12 +41,14 @@
 
 #include "skeleton.h"
 #include "tree_viewer.h"
+//#include "lsystem.h"
 
 using namespace easy3d;
 
 // save the smoothed skeleton into a PLY file (where each vertex has a radius)
 void save_skeleton(Skeleton* skeleton, PointCloud* cloud, const std::string& file_name) {
 	const ::Graph& sgraph = skeleton->get_smoothed_skeleton();
+
 	if (boost::num_edges(sgraph) == 0) {
 		std::cerr << "failed to save skeleton (no edge exists)" << std::endl;
 		return;
@@ -85,10 +87,15 @@ void save_skeleton(Skeleton* skeleton, PointCloud* cloud, const std::string& fil
 		prop[0] = offset[0];
 	}
 
-	if (GraphIO::save(file_name, &g))
+
+
+
+
+	if (GraphIO::save(file_name, &g)) {
         std::cout << "model of skeletons saved to: " << file_name << std::endl;
-    else
-		std::cerr << "failed to save the model of skeletons into file" << std::endl;
+    } else {
+	  	std::cerr << "failed to save the model of skeletons into file" << std::endl;
+    }
 }
 
 
@@ -147,6 +154,31 @@ int batch_reconstruct(std::vector<std::string>& point_cloud_files, const std::st
             delete skeleton;
             continue;
         }
+
+
+
+/*         LSystem *lsystem = new LSystem(); */
+/*         const ::Graph& sgraph = skeleton->get_smoothed_skeleton(); */
+/*         lsystem->generateLString(skeleton->RootV_, sgraph, 0.); */
+
+/*         std::ofstream outFile("output.txt"); */
+
+/*         // ファイルが正しく開けたかを確認 */
+/*         if (!outFile) { */
+/*             std::cerr << "Unable to open file for writing!" << std::endl; */
+/*             return 1; */
+/*         } else { */
+
+/*       std::cerr << "open file for writing!" << std::endl; */
+/*     } */
+
+/*         // ファイルにデータを書き込む */
+/*         outFile << lsystem->getLString() << std::endl; */
+
+/*         // ファイルを閉じる */
+/*         outFile.close(); */
+
+
 
         // copy translation property from point_cloud to surface_mesh
         SurfaceMesh::ModelProperty<dvec3> prop = mesh->add_model_property<dvec3>("translation");

@@ -26,9 +26,16 @@
 *	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <easy3d/viewer/viewer.h>
+//#include <easy3d/renderer/drawable_lines.h>
+//#include <easy3d/renderer/drawable_points.h>
+
 
 #include "tree_viewer.h"
 #include "skeleton.h"
+#include "lsystem.h"
+
+#include <boost/graph/graphviz.hpp>
 
 #include <3rd_party/glfw/include/GLFW/glfw3.h>	// Include glfw3.h after our OpenGL definitions
 
@@ -210,6 +217,25 @@ bool TreeViewer::save() const {
 }
 
 
+void TreeViewer::export_lsystem() const {
+  std::cout << "start export lsystem" << std::endl;
+
+/*   std::ofstream dot_file_m("graph_mst.dot"); */
+/*   write_graphviz(dot_file_m, skeleton_->get_mst()); */
+
+/*   std::ofstream dot_file_si("graph_simplify.dot"); */
+/*   write_graphviz(dot_file_si, skeleton_->get_simplified_skeleton()); */
+
+/*   std::ofstream dot_file_sm("graph_smoothed.dot"); */
+/*   write_graphviz(dot_file_sm, skeleton_->get_smoothed_skeleton()); */
+
+
+  LSystem *lsystem = new LSystem();
+  lsystem->generateLString(skeleton_->get_simplified_skeleton(), skeleton_->get_rootV(),  0.);
+  std::cout << "complete export lsystem" << std::endl;
+}
+
+
 void TreeViewer::export_skeleton() const {
     if (!branches() || !skeleton_) {
         std::cerr << "model of skeleton does not exist" << std::endl;
@@ -281,6 +307,7 @@ void TreeViewer::export_skeleton() const {
         }
     }
 
+    std::vector<vec3> graph_points;
     auto egs = boost::edges(skeleton);
     for (SGraphEdgeIterator iter = egs.first; iter != egs.second; ++iter) {
         SGraphEdgeDescriptor ed = *iter;    // the edge descriptor
@@ -289,6 +316,12 @@ void TreeViewer::export_skeleton() const {
         SGraphVertexDescriptor s = boost::source(*iter, skeleton);
         SGraphVertexDescriptor t = boost::target(*iter, skeleton);
         g.add_edge(vvmap[s], vvmap[t]);
+
+
+//      vec3 pVertex1 = (skeleton)[s].cVert;
+//      vec3 pVertex2 = (skeleton)[t].cVert;
+//      graph_points.push_back(pVertex1);
+//      graph_points.push_back(pVertex2);
     }
 #endif
 
@@ -297,6 +330,42 @@ void TreeViewer::export_skeleton() const {
         auto prop = g.model_property<dvec3>("translation");
         prop[0] = offset[0];
     }
+
+
+
+/*     LSystem *lsystem = new LSystem(); */
+/*     lsystem->generateLString(g,  0.); */
+/*     std::cout << "complete export lsystem" << std::endl; */
+
+//   easy3d::Viewer viewer("Easy3D Viewer");
+//    auto points = new easy3d::PointsDrawable("Vertices");
+//  auto lines = new easy3d::LinesDrawable("Edges");
+
+  // Add vertices to points drawable
+//  for (auto v : g.vertices()) {
+//      vec3 pos = g.position(v);  // Assuming 'vec3' is the type for position
+//      points->update_vertex_buffer({pos});
+//  }
+//  points->update_vertex_buffer(graph_points);
+//  easy3d::Model model("graph");
+
+  // Add edges to lines drawable
+//  for (auto e : g.edges()) {
+//      vec3 src = g.position(g.source(e));
+//      vec3 tgt = g.position(g.target(e));
+//      lines->update_vertex_buffer({src, tgt});
+//  }
+//
+
+
+///    for (auto m : models_) {
+//      viewer.add_model(&g);
+//    }
+
+// Run the viewer
+//viewer.run();
+  //
+
 
     if (GraphIO::save(file_name, &g))
         std::cout << "successfully saved the skeleton to a graph file. The graph can be visualized using Easy3D,\n"
@@ -506,6 +575,35 @@ bool TreeViewer::reconstruct_skeleton() {
     }
     bool status = skeleton_->reconstruct_branches(cloud(), mesh);
     if (status) {
+
+
+
+
+
+/* LSystem *lsystem = new LSystem(); */
+/* const ::Graph& sgraph = skeleton_->get_smoothed_skeleton(); */
+/* lsystem->generateLString(skeleton_->RootV_, sgraph, 0.); */
+
+/* std::ofstream outFile("output.txt"); */
+
+/* // ファイルが正しく開けたかを確認 */
+/* if (!outFile) { */
+/*     std::cerr << "Unable to open file for writing!" << std::endl; */
+/*     return 1; */
+/* } else { */
+
+/* std::cerr << "open file for writing!" << std::endl; */
+/* } */
+
+/* // ファイルにデータを書き込む */
+/* outFile << lsystem->getLString() << std::endl; */
+
+// ファイルを閉じる
+/* outFile.close(); */
+
+
+
+
         auto offset = cloud()->get_model_property<dvec3>("translation");
         if (offset) {
             auto prop = mesh->model_property<dvec3>("translation");

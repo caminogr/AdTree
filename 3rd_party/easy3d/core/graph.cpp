@@ -132,6 +132,7 @@ namespace easy3d {
 
     void Graph::clear()
     {
+  
         vprops_.resize(0);
         eprops_.resize(0);
         mprops_.resize(0);
@@ -190,6 +191,27 @@ namespace easy3d {
 
 
     //-----------------------------------------------------------------------------
+
+
+  void Graph::print() const 
+  {
+  // verticesの出力
+    std::cout << std::endl;
+   std::cout << "Vertices: " << vconn_ << std::endl;
+
+    // eprops_の出力
+    //std::cout << "eprops_: " << eprops_ << std::endl;
+
+    // mprops_の出力
+    //std::cout << "mprops_:" << mprops_ << std::endl;
+
+    // vconn_の出力
+    //std::cout << "vconn_:" << vconn_ << std::endl;
+
+    // econn_の出力
+    //std::cout << "econn_:" << econn_ << std::endl;
+
+}
 
 
     Graph::Vertex Graph:: add_vertex(const vec3& p)

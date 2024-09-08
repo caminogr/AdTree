@@ -28,6 +28,7 @@
 
 #include "skeleton.h"
 #include "cylinder.h"
+//#include "lsystem.h"
 
 #include <easy3d/core/point_cloud.h>
 #include <easy3d/core/surface_mesh.h>
@@ -37,10 +38,56 @@
 
 #include <iostream>
 #include <algorithm>
-
+#include <fstream>
 
 using namespace boost;
 using namespace easy3d;
+
+
+/* using Graph = boost::adjacency_list<boost::setS, boost::vecS, boost::undirectedS, SGraphVertexProp, SGraphEdgeProp>; */
+/* using Vertex = boost::graph_traits<Graph>::vertex_descriptor; */
+
+
+
+
+/* std::string traversal(const Graph& skel, SGraphVertexDescriptor startV, SGraphVertexDescriptor prevV) { */
+/*     std::string L_string; */
+/*     std::vector<SGraphVertexDescriptor> children; */
+
+
+/*     // 子ノードを取得 */
+/*     /1* for (auto e : out_edges(startV, skel)) { *1/ */
+/*     /1*     SGraphVertexDescriptor target = boost::target(e, skel); *1/ */
+/*     /1*     if (target != prevV) { *1/ */
+/*     /1*         children.push_back(target); *1/ */
+/*     /1*     } *1/ */
+/*     /1* } *1/ */
+/* auto edgeRange = out_edges(startV, skel); */
+/* for (auto it = edgeRange.first; it != edgeRange.second; ++it) { */
+/*     SGraphVertexDescriptor target = boost::target(*it, skel); */
+/*     if (target != prevV) { */
+/*         children.push_back(target); */
+/*     } */
+/* } */
+
+/*     // 子ノードの数に応じて処理 */
+/*     if (children.size() <= 1) { */
+/*         // 子が1つまたは0の場合 */
+/*         /1* L_string += /2* ここに相対的な動きを記述 *2/; *1/ */
+/*         if (children.size() == 1) { */
+/*             L_string += traversal(skel, children[0], startV); */
+/*         } */
+/*     } else { */
+/*         // 子が2つ以上の場合 */
+/*         for (auto child : children) { */
+/*             L_string += "["; */
+/*             L_string += traversal(skel, child, startV); */
+/*             L_string += "]"; */
+/*         } */
+/*     } */
+
+/*     return L_string; */
+/* } */
 
 Skeleton::Skeleton() 
     : Points_(nullptr)
@@ -173,6 +220,28 @@ bool Skeleton::extract_mst()
     if (!quiet_)
         std::cout << "finish the minimum spanning tree extraction!" << std::endl;
 
+
+
+
+
+
+/*   // 頂点の情報を出力 */
+/* std::cout << "Vertices:" << std::endl; */
+/* typedef boost::graph_traits<Graph>::vertex_iterator vertex_iter; */
+/* std::pair<vertex_iter, vertex_iter> verp; */
+/* for (verp = boost::vertices(MST_); verp.first != verp.second; ++verp.first) { */
+/*     std::cout << *verp.first << std::endl; */
+/* } */
+
+/* // エッジの情報を出力 */
+/* std::cout << "Edges:" << std::endl; */
+/* typedef boost::graph_traits<Graph>::edge_iterator edge_iter; */
+/* std::pair<edge_iter, edge_iter> ep; */
+/* for (ep = boost::edges(MST_); ep.first != ep.second; ++ep.first) { */
+/*     std::cout << source(*ep.first, MST_) << " -- " << target(*ep.first, MST_) << std::endl; */
+/* } */
+
+
 	return true;
 }
 
@@ -191,7 +260,6 @@ bool Skeleton::simplify_skeleton()
         std::cout << "finish the skeleton graph refining!" << std::endl;
 	return true;
 }
-
 
 // internally a hermite curve with varying radius
 bool Skeleton::smooth_skeleton()
@@ -311,6 +379,7 @@ bool Skeleton::smooth_skeleton()
             add_edge(vertices[np], vertices[np + 1], SGraphEdgeProp(), smoothed_skeleton_);
         }
     }
+
 
     return true;
 }
@@ -1009,8 +1078,8 @@ void Skeleton::fit_trunk()
     //Cylinder currentC = Cylinder(pSource, pTarget, simplified_skeleton_[trunkE].nRadius);
 
 	//initialize the mean, the point cloud matrix
-	Vector3D pTop(0.0, 0.0, -FLT_MAX);
-	Vector3D pBottom(0.0, 0.0, FLT_MAX);
+	Vector3D pTop(0.0, 0.0, -DBL_MAX);
+	Vector3D pBottom(0.0, 0.0, DBL_MAX);
 
 	PrincipalAxes<3, double> pca;
 	pca.begin();
@@ -1276,6 +1345,28 @@ bool Skeleton::reconstruct_branches(const PointCloud* cloud, SurfaceMesh* mesh) 
         std::cerr << "failed extracting branches" << std::endl;
         return false;
     }
+
+  // ---- 
+
+        /* LSystem *lsystem = new LSystem(); */
+        /* lsystem->generateLString(RootV_, smoothed_skeleton_, 0.); */
+
+        /* std::ofstream outFile("output.txt"); */
+
+        /*   // ファイルが正しく開けたかを確認 */
+        /*   if (!outFile) { */
+        /*       std::cerr << "Unable to open file for writing!" << std::endl; */
+        /*       return 1; */
+        /*   } */
+
+        /*   // ファイルにデータを書き込む */
+        /*   outFile << lsystem->getLString() << std::endl; */
+
+        /*   // ファイルを閉じる */
+        /*   outFile.close(); */
+
+    // ---- 
+
 
     return true;
 }

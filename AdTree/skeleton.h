@@ -103,6 +103,7 @@ public:
     const Graph& get_mst() const { return MST_; }
     const Graph& get_simplified_skeleton() const { return simplified_skeleton_; }
     const Graph& get_smoothed_skeleton() const { return smoothed_skeleton_; }
+    const SGraphVertexDescriptor& get_rootV() const { return RootV_; }
 
     struct Branch {
         std::vector<easy3d::vec3> points;
@@ -229,6 +230,7 @@ private:
 
 private:
 	/*store points and kd index*/
+  SGraphVertexDescriptor RootV_;
 	Vector3D* Points_;
 	KdTree* KDtree_;
 
@@ -242,7 +244,6 @@ private:
 	std::vector<Leaf> VecLeaves_;
 
 	/*store important vertex and geometrical attributes*/
-	SGraphVertexDescriptor RootV_;
 	Vector3D RootPos_;
 	double TrunkRadius_;
 	double TreeHeight_;
